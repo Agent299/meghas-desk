@@ -15,7 +15,7 @@ The product is defined in [PRD.md](PRD.md). Terms follow [GLOSSARY.md](../GLOSSA
 | UI | Tailwind CSS + shadcn/ui |
 | API layer | oRPC procedures with Zod input/output schemas, served from a Next.js route handler |
 | Validation | Zod |
-| Auth | Neon Auth (managed Better Auth), Google + GitHub OAuth only |
+| Auth | Neon Auth (managed Better Auth): Google, magic link, email + password (6-digit code verification and reset) |
 | Database | Neon Postgres + pgvector |
 | Data access | Neon Data API (with RLS) from the dashboard; Neon serverless driver from server code (see below) |
 | Migrations | dbmate: plain `.sql` files |
@@ -40,7 +40,10 @@ Rule of thumb: if an action does more than write one row (send a reply, Claim, b
 
 ## Identity
 
-- **Team members** sign in with Google or GitHub through Neon Auth. There's no email provider, so no email/password sign-in.
+- **Team members** sign in through Neon Auth with Google, a magic link, or email and password. Email sign-ups confirm with a 6-digit code; resets use a code too. Neon sends these emails; our code sends none.
+- Auth code lives in `lib/auth/`: `server.ts` (`createNeonAuth`, server only), `client.ts` (`createAuthClient()`, no arguments, browser only), `errors.ts` (maps the client's thrown errors to UI copy). `app/api/auth/[...path]` proxies to Neon.
+- `proxy.ts` (project root) matches only `/dashboard/*`. Neon's middleware treats every matched path outside its own `/auth/*` list as protected, so public pages stay out of the matcher. The dashboard layout re-checks the session on the server; the `(auth)` route group's layout sends signed-in users to `/dashboard`.
+- Auth settings (sign-in methods, verification, magic link, trusted domains) are configured per Neon branch with `neon neon-auth` / `neon api`, not in code. `neon.ts` only switches services on.
 - **Visitors** are not Neon Auth users. Next.js issues a signed visitor token (a JWT signed with a server secret). Widget API calls send it, and PartyKit verifies the same token in `onBeforeConnect`.
 - Team members connecting to PartyKit present their Neon Auth JWT, verified against Neon Auth's JWKS.
 
@@ -72,5 +75,5 @@ Rule of thumb: if an action does more than write one row (send a reply, Claim, b
 | Neon AI Gateway | Needs a paid Neon plan; revisit later (PRD §10) |
 | Vercel AI SDK | Official SDKs get new model features first; our own `lib/ai/` module keeps the Gateway swap cheap |
 | Redis / Upstash | Counter volume fits in Postgres |
-| Email provider | OAuth-only sign-in and Invite links remove the need (PRD §8) |
+| Our own email provider | Neon Auth sends auth emails: its shared sender in development, our own SMTP configured in Neon before launch. The app sends no email (PRD §8) |
 | Sentry | Deferred; platform logs only for v1 |

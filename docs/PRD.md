@@ -86,7 +86,11 @@ Each requirement has acceptance criteria so the builder knows when it's done. La
 
 ### 7.1 Workspaces & auth
 
-- Owners and Team members sign in with **Google or GitHub OAuth** via Better-auth (on Neon Auth). There is no email/password sign-in, so v1 needs no email provider.
+- Owners and Team members sign in with **Google**, a **magic link**, or **email and password**, via Neon Auth (managed Better Auth). Sign-up asks for a name, because Visitors see the Team member's first name.
+- Email and password sign-ups confirm their address with a **6-digit code** before they can use MeghasDesk. Google and magic-link sign-ups count as verified.
+- A forgotten password is reset with a **6-digit code** sent by email.
+- A Google sign-in with the same email as an existing, verified email/password account opens that same account, not a second one.
+- Neon Auth sends every auth email (codes and magic links). MeghasDesk itself sends no email.
 - A new sign-in without an Invite link creates a Workspace, and that person becomes its **Owner**.
 - The Owner shares a copyable **Invite link**. Opening it and signing in joins that Workspace as a Team member. The Owner can regenerate the link, which invalidates the old one.
 - Each person belongs to **exactly one** Workspace. Opening an Invite link with an account that already belongs to a Workspace shows an error explaining that a different account is needed.
@@ -137,7 +141,7 @@ Each requirement has acceptance criteria so the builder knows when it's done. La
 
 ## 8. Non-goals (v1)
 
-- Email, ticketing, or any async channel. This includes sending email to Visitors or Team members (no verification, invite, or notification emails)
+- Email, ticketing, or any async channel. MeghasDesk sends no email to Visitors or Team members. The only emails are Neon Auth's verification and reset codes and magic links
 - Help center, knowledge-base articles shown to Visitors, product tours
 - Native mobile apps (the widget and dashboard should still work on a mobile browser)
 - Billing, pricing plans, usage metering shown to customers (beyond the "allowance used up" notice)
@@ -157,7 +161,7 @@ The engineering stack is already decided. The full detail is in [TECH-STACK.md](
 | Concern | Choice | Product implication |
 |---|---|---|
 | App + API + AI orchestration | Next.js on Vercel | One server handles the dashboard, the widget API, and the agent loop |
-| Auth | Better-auth on Neon Auth, Google + GitHub OAuth | Owner and Team member login. Visitors are anonymous and token-based, not Better-auth users |
+| Auth | Neon Auth (managed Better Auth): Google, magic link, email + password with code verification | Owner and Team member login. Neon sends the auth emails. Visitors are anonymous and token-based, not Better-auth users |
 | Classify + answer | Claude Sonnet 5.5 via direct API calls behind an internal interface | Neon AI Gateway needs a paid plan. The interface keeps model choice in one place so the Gateway can replace it later. Token spend is logged by us |
 | Embeddings | OpenAI | Uploads and questions must use the same embedding model, or retrieval breaks |
 | Data + vector search | Neon Postgres + pgvector | Every table and query is keyed by `workspace_id` |
@@ -176,17 +180,19 @@ The engineering stack is already decided. The full detail is in [TECH-STACK.md](
 | How is "can't answer" measured? | Start simple: the top chunk's similarity is below a threshold **or** the model returns an explicit `cannot_answer` flag → Handoff offer. Tune the threshold with the eval set |
 | Visitor asks for a person and nobody is online | **Decided:** the Conversation stays in Waiting, the Visitor can leave an optional email, and the team follows up by hand outside MeghasDesk |
 | Classifier wrongly declines real questions | Track false declines (metric #4), including non-English questions. Lean permissive for anything related to the Business description |
-| Public sign-up means strangers spend our model budget | **Decided:** hard Monthly allowance and knowledge base limit per Workspace; the AI pauses when the allowance runs out. OAuth-only sign-in makes throwaway accounts harder |
+| Public sign-up means strangers spend our model budget | **Decided:** hard Monthly allowance and knowledge base limit per Workspace; the AI pauses when the allowance runs out. Email sign-ups must confirm their address with a code before they get in |
 | Someone copies a widget snippet onto another site | **Decided:** Allowed domains are required and checked against the request origin. Rate limits apply on top |
 | Scanned PDFs and images with no text layer | Out of scope for v1. Mark the file **Failed** with a clear reason |
 | Can a Closed Conversation be reopened when the Visitor writes again? | **Decided:** yes, it reopens in AI answering |
 | Allowance and limit values | Open: pick numbers for the Monthly allowance, knowledge base size, and rate limits before M5 |
+| Auth emails come from Neon's shared sender | It's rate-limited and meant for development. **Before launch:** configure our own SMTP provider in Neon (`neon neon-auth config email-provider`). No app code changes |
+| Auth launch checklist | Before launch, on `production`: our own Google OAuth app (redirect `{NEON_AUTH_BASE_URL}/callback/google`) instead of Neon's shared credentials; our own SMTP; the production domain in trusted domains; turn off "Allow localhost" |
 
 ## 11. Proposed timeline
 
 | Milestone | Scope | Exit check |
 |---|---|---|
-| **M1: Skeleton** | Google/GitHub OAuth, Workspaces with Owner and Invite link, Business description and Allowed domains settings, DB schema, deploy pipeline to both Neon branches | Owner can sign up on production and invite a teammate |
+| **M1: Skeleton** | Sign-in (Google, magic link, email + password), Workspaces with Owner and Invite link, Business description and Allowed domains settings, DB schema, deploy pipeline to both Neon branches | Owner can sign up on production and invite a teammate |
 | **M2: Live chat** | Widget + dashboard preview + PartyKit + inbox, human-only replies, Claim, browser notifications | Visitor ↔ team chat works across domains |
 | **M3: Knowledge** | Flow A end to end | 20-page PDF reaches **Ready** |
 | **M4: Agent** | Flow B + classifier + Handoff offer + eval set | §4 targets #2–#5 met |

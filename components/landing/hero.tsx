@@ -29,7 +29,7 @@ export function Hero({ hero, trust }: HeroProps) {
         className="mb-[clamp(16px,2.5vh,26px)] flex animate-reveal items-center [--trust-size:clamp(36px,4.5vw,42px)] motion-reduce:animate-none max-[420px]:[--trust-size:34px] [@media(max-height:700px)]:mb-3"
         style={delay(0.05)}
       >
-        <AvatarGroup className="space-x-0">
+        <AvatarGroup className="space-x-0 *:data-[slot=avatar]:ring-white">
           {trust.marks.map(({ icon: Icon, label }, i) => (
             <Avatar
               key={label}

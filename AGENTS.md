@@ -30,7 +30,7 @@ These hold in every change. Each one protects a PRD success criterion.
 - **Side effects go through oRPC.** Anything beyond a one-row edit (sending a reply, a Claim, a PartyKit broadcast, a model call) is an oRPC procedure in `server/`, even when the dashboard starts it.
 - **Classify first.** Every Visitor message is classified before any embedding, retrieval or generation. An off-topic message ends at the Decline.
 - **The AI is silent in Waiting and Human.** Only the Visitor moves a Conversation to Waiting (or an exhausted Monthly allowance); the AI's Handoff offer leaves the state unchanged.
-- **Visitors are not auth users.** They carry a Next.js-signed visitor token, verified by our routes and by PartyKit's `onBeforeConnect`. Team members use Neon Auth (Google/GitHub OAuth only).
+- **Visitors are not auth users.** They carry a Next.js-signed visitor token, verified by our routes and by PartyKit's `onBeforeConnect`. Team members use Neon Auth: Google, magic link, or email + password with 6-digit code verification.
 - **PartyKit is a relay.** It never touches the database: Next.js saves a message, then posts it to the room.
 - **Model calls live in `lib/ai/`** (`classify`, `answer`, `embed`) so the Neon AI Gateway can replace them later. Log token use per Workspace there.
 
@@ -41,6 +41,8 @@ These hold in every change. Each one protects a PRD success criterion.
 - **Zod is v4**: `import * as z from "zod"`.
 - **Claude model is `claude-sonnet-5-5`** for classify and answer. `thinking: {type: "disabled"}` returns a 400 on it; use `{type: "between_tools"}` or low effort. Keep p95 time-to-first-token under 3 s across classify + answer.
 - **Embeddings use one fixed OpenAI model** for both ingest and questions; changing it means re-embedding every chunk.
+- **Neon Auth's client throws** an `AuthApiError` (snake_case `code`, e.g. `email_not_confirmed`) instead of returning `{ error }`. Wrap calls in try/catch and use `lib/auth/errors.ts`.
+- **`proxy.ts` lives in the project root**, not `app/` (Next.js 16; Neon's own skill shows `app/proxy.ts`, which is wrong). Its matcher lists protected routes only.
 - **Next.js 16 route types** (`LayoutProps`, `PageProps`) are generated; `pnpm typecheck` runs `next typegen` first.
 - **pnpm blocks install scripts.** A new package that needs one is allowed in `pnpm-workspace.yaml` under `allowBuilds`, after checking what the script does.
 - **New dependencies**: confirm the install command on the upstream project's own docs before adding it, and use the current stable release.

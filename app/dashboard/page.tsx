@@ -1,9 +1,10 @@
-export default function DashboardPage() {
+export default function OverviewPage() {
   return (
-    <main className="flex flex-1 items-center justify-center">
-      <h1 className="text-3xl font-semibold tracking-tight">
-        Hello from the dashboard
-      </h1>
-    </main>
-  );
+    <section className="flex flex-col gap-1">
+      <h2 className="text-2xl font-semibold tracking-tight">Overview</h2>
+      <p className="text-sm text-muted-foreground">
+        A summary of your Conversations and Handoff offers will appear here.
+      </p>
+    </section>
+  )
 }
