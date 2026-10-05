@@ -107,7 +107,20 @@ The shell for everything a Team member does, built from shadcn's `dashboard-01` 
 - **Navigation:** Overview (`/dashboard`, exact match) and Inbox (`/dashboard/inbox` and below). The active link uses the sidebar's `isActive` state and `aria-current="page"`. Add new sections here as links, not as nested menus.
 - **Header** (`--header-height: calc(var(--spacing) * 12)`): the sidebar toggle, a separator, the current page title, and the theme toggle on the right.
 - **User menu** (sidebar footer): avatar (image, or initials on `bg-primary`), name in `text-foreground` and email in `text-foreground/70`, truncated when long; a name-less user shows the email only. The menu holds **Theme** and **Log out**, nothing else until there is something real to put there.
-- **Pages** render inside the inset with `p-4 lg:p-6`. They don't render their own `<main>`; `SidebarInset` already is one.
+- **Pages** render inside a fixed-height inset (the header stays put) and set their own padding: ordinary pages use `p-4 lg:p-6` and scroll inside the inset; the inbox fills it edge to edge with panes that scroll on their own. Pages don't render their own `<main>`; `SidebarInset` already is one.
+- **Sample data:** until Workspaces and the widget exist, the Overview and the inbox read sample data from `lib/inbox/queries.ts` (the one module the real data replaces) and say so with `SampleDataNotice`.
+
+### Overview
+
+Not an analytics page (PRD §8). A setup checklist toward a working widget (PRD §4 #1: Business description → Allowed domain → Knowledge file → widget preview → snippet), with a progress bar and a "Next" badge on the first open step, beside **Needs attention**: Waiting Conversations, longest-waiting first, each linking to its thread. The "Monthly allowance used up" notice (destructive `Alert`) appears above both only when it applies.
+
+### Inbox
+
+- **Panes:** Conversation list (`lg:w-80`, `xl:w-88`) · thread · details (`w-72`, from `xl:` up, toggled from the thread header; a `Sheet` below `xl:`). Below `lg:` the list (`/dashboard/inbox`) and the thread (`/dashboard/inbox/[conversationId]`) are separate screens with a back button.
+- **List:** one `Select` of views with counts (Open by default, Waiting, AI answering, Human, Claimed by you, Closed, All). Waiting sorts to the top, longest-waiting first; everything else by latest activity.
+- **Waiting stands out without colour:** the only filled state badge (with a pinging dot, static under reduced motion), a semibold name and full-strength preview text. Other states: Human `secondary`, AI answering `outline` with `BotIcon`, Closed `outline` muted.
+- **Messages:** Visitors on the left in `bg-muted` with a person icon (they are anonymous, so no initials); the AI on the right as an outline bubble labelled "AI" with `BotIcon`, plus a "Handoff offer" or "Decline" badge when it is one; Team members on the right in `bg-primary`, labelled with their first name ("You" for yourself). Classifier verdicts show as a caption under the Visitor's message ("Off-topic", "Asked for a person"). State changes (asked for a person, claimed, closed, reopened, allowance used up) are centred muted lines with an icon.
+- **Actions:** Claim (Re-claim when someone else holds it) and Close (only in Human) in the thread header. The composer sends on Enter (Shift+Enter for a new line), says when sending will claim, and is disabled in Closed.
 - **Auth pages** use the `login-04` card. `/login` and `/signup` show the form on the left and the still from the hero video (`public/auth-cover.jpg`) on the right from `md:` up; the single-purpose steps (`/forgot-password`, `/verify-email`) use the narrow card without the image. Email codes use shadcn's `InputOTP` (two groups of three). Form-level messages use shadcn's `Alert`. The theme toggle sits in the top-right corner.
 
 ## Components

@@ -43,9 +43,10 @@ export default async function DashboardLayout({
       }
     >
       <AppSidebar variant="inset" user={user} />
-      <SidebarInset>
+      {/* A fixed-height inset, so the header stays put and panes (the inbox) scroll on their own. */}
+      <SidebarInset className="h-svh overflow-hidden md:h-[calc(100svh-1rem)]">
         <SiteHeader />
-        <div className="flex flex-1 flex-col gap-2 p-4 lg:p-6">{children}</div>
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">{children}</div>
       </SidebarInset>
       <Toaster />
     </SidebarProvider>
