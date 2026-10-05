@@ -8,5 +8,5 @@ Each person (login account) belongs to exactly one Workspace, either as its Owne
 
 ## Consequences
 
-- Someone who already owns or belongs to a Workspace can't accept an Invite link to another one with the same account. They have to sign in with a different Google or GitHub account, and the invite page says so.
+- Someone who already owns or belongs to a Workspace can't accept an Invite link to another one with the same account. They have to sign in with a different account (another email or Google account), and the invite page says so.
 - Allowing more than one Workspace later means migrating membership to a many-to-many relationship, adding the switcher, and re-checking every query that currently gets its Workspace from the person.

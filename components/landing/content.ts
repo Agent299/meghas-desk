@@ -21,7 +21,7 @@ export const navLinks: NavLink[] = [
   { label: "Handoff", href: "#handoff" },
 ];
 
-export const signIn = { label: "Sign in", href: "/dashboard" };
+export const signIn = { label: "Sign in", href: "/login" };
 
 // The three steps of every Conversation: your docs, the AI, your team.
 export const trust: { label: string; marks: { icon: LucideIcon; label: string }[] } = {
