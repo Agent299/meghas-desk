@@ -2,7 +2,8 @@
 
 import * as React from "react"
 
-import { applyAction, type ConversationAction, type InboxView } from "@/lib/inbox/conversations"
+import { randomId } from "@/lib/id"
+import { applyAction, firstName, type ConversationAction, type InboxView } from "@/lib/inbox/conversations"
 import type { InboxData } from "@/lib/inbox/queries"
 import type { Conversation, TeamMember } from "@/lib/inbox/types"
 
@@ -45,7 +46,7 @@ export function InboxProvider({ initial, children }: { initial: InboxData; child
             ? applyAction(conversation, action, {
                 memberId: initial.currentMemberId,
                 at,
-                idPrefix: `${conversationId}-${crypto.randomUUID()}`,
+                idPrefix: `${conversationId}-${randomId()}`,
               })
             : conversation
         )
@@ -85,7 +86,7 @@ export function useMemberLabel() {
       if (memberId === currentMemberId) return "You"
       const name = members.find((m) => m.id === memberId)?.name
       if (!name) return "A Team member"
-      return first ? name.trim().split(/\s+/)[0] : name
+      return first ? firstName(name) : name
     },
     [members, currentMemberId]
   )

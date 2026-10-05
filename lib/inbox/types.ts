@@ -67,20 +67,3 @@ export type Conversation = {
   waitingSince: string | null;
   timeline: TimelineItem[];
 };
-
-export type SetupStepId =
-  | "business_description"
-  | "allowed_domain"
-  | "knowledge_file"
-  | "widget_preview"
-  | "install_snippet";
-
-export type SetupStep = {
-  id: SetupStepId;
-  done: boolean;
-};
-
-export type WorkspaceOverview = {
-  setup: SetupStep[];
-  allowanceUsedUp: boolean;
-};

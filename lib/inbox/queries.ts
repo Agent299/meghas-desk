@@ -1,5 +1,7 @@
-import { sampleConversations, sampleMembers, sampleOverview, CURRENT_MEMBER_ID } from "./sample-data";
-import type { Conversation, TeamMember, WorkspaceOverview } from "./types";
+import { sampleConversations, sampleMembers, CURRENT_MEMBER_ID } from "./sample-data";
+import type { Conversation, TeamMember } from "./types";
+import { sampleWidgetSettings } from "../widget/sample-data";
+import type { WidgetSettings } from "../widget/types";
 
 // The one place the dashboard gets Workspace data from. Today it returns sample
 // data; it becomes Data API reads (and PartyKit for live updates) once the
@@ -23,10 +25,10 @@ export async function getInboxData(yourName: string): Promise<InboxData> {
   };
 }
 
-export async function getWorkspaceOverview(): Promise<WorkspaceOverview> {
-  return sampleOverview();
-}
-
 export async function conversationExists(id: string): Promise<boolean> {
   return sampleConversations(Date.now()).some((c) => c.id === id);
+}
+
+export async function getWidgetSettings(): Promise<WidgetSettings> {
+  return sampleWidgetSettings(Date.now());
 }

@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   applyAction,
   countByView,
+  formatAgo,
   formatRelative,
   lastMessage,
   matchesView,
@@ -130,6 +131,18 @@ describe("formatting", () => {
     expect(formatRelative(ago(180), NOW)).toBe("3h");
     expect(formatRelative(ago(60 * 48), NOW)).toBe("2d");
     expect(formatRelative(ago(60 * 24 * 10), NOW)).toBe("Sep 25");
+  });
+
+  it("says just now rather than now ago", () => {
+    expect(formatAgo(ago(0), NOW)).toBe("just now");
+    expect(formatAgo(ago(5), NOW)).toBe("5m ago");
+    expect(formatAgo(ago(60 * 24 * 10), NOW)).toBe("on Sep 25");
+  });
+
+  it("formats dates in UTC, whatever the local time zone", () => {
+    // 23:30 UTC on Sep 20 is already Sep 21 east of UTC+0:30.
+    const late = Date.parse("2026-09-20T23:30:00Z");
+    expect(formatRelative(new Date(late).toISOString(), late + 10 * 24 * 60 * 60_000)).toBe("Sep 20");
   });
 });
 

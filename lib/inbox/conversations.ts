@@ -2,7 +2,6 @@ import type {
   Conversation,
   ConversationState,
   MessageItem,
-  TeamMember,
   Visitor,
 } from "./types";
 
@@ -168,11 +167,6 @@ export function firstName(name: string): string {
   return name.trim().split(/\s+/)[0] ?? name;
 }
 
-export function memberName(members: TeamMember[], memberId: string | null | undefined): string | null {
-  if (!memberId) return null;
-  return members.find((m) => m.id === memberId)?.name ?? null;
-}
-
 /** "now", "5m", "3h", "2d", then a short date. Future times count as now. */
 export function formatRelative(iso: string, now: number): string {
   const minutes = Math.floor(Math.max(0, now - Date.parse(iso)) / 60_000);
@@ -182,5 +176,17 @@ export function formatRelative(iso: string, now: number): string {
   if (hours < 24) return `${hours}h`;
   const days = Math.floor(hours / 24);
   if (days < 7) return `${days}d`;
-  return new Date(iso).toLocaleDateString("en", { month: "short", day: "numeric" });
+  return shortDate(iso);
+}
+
+// UTC, so the server and every browser render the same text (no hydration mismatch).
+function shortDate(iso: string): string {
+  return new Date(iso).toLocaleDateString("en", { month: "short", day: "numeric", timeZone: "UTC" });
+}
+
+/** "just now", "5m ago", "2d ago", then "on Sep 26". */
+export function formatAgo(iso: string, now: number): string {
+  const relative = formatRelative(iso, now);
+  if (relative === "now") return "just now";
+  return /^\d+[mhd]$/.test(relative) ? `${relative} ago` : `on ${relative}`;
 }
