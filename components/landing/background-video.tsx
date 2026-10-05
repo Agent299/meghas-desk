@@ -1,7 +1,8 @@
 const VIDEO_SRC =
   "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260809_012548_ef22562c-c0ae-4816-ad9d-f8922af4e6a7.mp4";
 
-export function BackgroundVideo() {
+/** `poster`: a still shown until the video plays (the auth panel uses one). */
+export function BackgroundVideo({ poster }: { poster?: string } = {}) {
   return (
     <div aria-hidden="true" className="absolute inset-0 overflow-hidden bg-black">
       <video
@@ -10,6 +11,7 @@ export function BackgroundVideo() {
         muted
         loop
         playsInline
+        poster={poster}
       >
         <source src={VIDEO_SRC} type="video/mp4" />
       </video>

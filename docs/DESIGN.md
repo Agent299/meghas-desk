@@ -77,15 +77,16 @@ All motion uses `--ease-out-expo` (`cubic-bezier(0.22, 1, 0.36, 1)`).
 | Class | What it does | Duration |
 |---|---|---|
 | `animate-reveal` | Fade in from 22px below, scale 0.98 and 6px blur | 0.85s |
-| `animate-reveal-pulse` | Reveal, then a 3% overshoot. Primary CTA only | 1.1s |
 | `animate-headline` | Fade in from 14px below, one line at a time | 0.85s |
 | `animate-slide-down` | Header drops in from 18px above | 0.7s |
 | `animate-link-in` | Menu links rise 8px | 0.4s |
 
-- **Stagger** with an inline `animationDelay`. Each element on the landing page is about 0.08–0.18s after the one before it. Header first, then trust row → headline lines → subhead → CTA → stats.
+- **Stagger** with an inline `animationDelay`. Each element on the landing page is about 0.08–0.18s after the one before it. Header first, then trust row → headline lines → subhead → CTA → stats. The CTA uses the same `animate-reveal` as everything else.
 - All of these use `fill-mode: both`, so they control opacity. Fade text with a colour alpha (`text-[#d0d0d0]/80`), not `opacity-*`.
 - **Reduced motion:** every animated element also gets `motion-reduce:animate-none`, and JS-driven motion (the stat count-up) checks `prefers-reduced-motion` and shows the final value.
-- Hover feedback: lift 1–4px (`-translate-y-*`) and, on the CTA, scale to 1.02. Durations 200–350ms.
+- **Nothing grows.** No hover scale-ups and no overshoot on entrance; they read as bouncy, not professional. The glow CTA answers hover with a stronger glow only (`shadow-glow-strong`); dark pills may lift 1px.
+- **Press feedback:** every `Button` scales to 0.97 on `:active` (not on menu triggers), with a 150ms `ease-out` transition on explicit properties (colour, background, border, shadow, opacity, translate, scale), never `transition-all`.
+- Tailwind v4's `hover:` only applies on devices that can hover, so touch screens don't get stuck hover states.
 
 ## Layout
 
@@ -121,7 +122,10 @@ Not an analytics page (PRD §8). A setup checklist toward a working widget (PRD 
 - **Waiting stands out without colour:** the only filled state badge (with a pinging dot, static under reduced motion), a semibold name and full-strength preview text. Other states: Human `secondary`, AI answering `outline` with `BotIcon`, Closed `outline` muted.
 - **Messages:** Visitors on the left in `bg-muted` with a person icon (they are anonymous, so no initials); the AI on the right as an outline bubble labelled "AI" with `BotIcon`, plus a "Handoff offer" or "Decline" badge when it is one; Team members on the right in `bg-primary`, labelled with their first name ("You" for yourself). Classifier verdicts show as a caption under the Visitor's message ("Off-topic", "Asked for a person"). State changes (asked for a person, claimed, closed, reopened, allowance used up) are centred muted lines with an icon.
 - **Actions:** Claim (Re-claim when someone else holds it) and Close (only in Human) in the thread header. The composer sends on Enter (Shift+Enter for a new line), says when sending will claim, and is disabled in Closed.
-- **Auth pages** use the `login-04` card. `/login` and `/signup` show the form on the left and the still from the hero video (`public/auth-cover.jpg`) on the right from `md:` up; the single-purpose steps (`/forgot-password`, `/verify-email`) use the narrow card without the image. Email codes use shadcn's `InputOTP` (two groups of three). Form-level messages use shadcn's `Alert`. The theme toggle sits in the top-right corner.
+- **Auth pages** (`/login`, `/signup`, `/forgot-password`, `/verify-email`) share one frame in `app/(auth)/layout.tsx`, so the video keeps playing between steps:
+  - **Form column** (follows the theme, `bg-muted`): logo in a `bg-foreground` circle plus "MeghasDesk" top-left (links home), `ModeToggle` top-right, and the step's form in `AuthCard`: a shadcn `Card` on its default radius, with `shadow-soft` and `animate-reveal`. `AuthHeader` sets the step title in the display face, Title Case. Inputs and buttons keep the normal app radius (`rounded-lg`), not pills, so auth matches the dashboard; both are 44px tall (`Button size="xl"`, `TextField` inputs `h-11`). Email codes use shadcn's `InputOTP` (two groups of three) with each digit in the display face. Every field has a placeholder; password fields (`TextField type="password"`) add a show/hide toggle at the end, a ghost icon `Button` with `aria-pressed` and a "Show password"/"Hide password" label. Form-level messages use shadcn's `Alert`.
+  - **Brand panel** (`AuthPanel`, from `lg:`): a `rounded-xl` black panel, sticky at viewport height, with the hero video (`BackgroundVideo`, `public/auth-cover.jpg` as poster), a radial scrim behind the headline and a bottom gradient. It holds the trust badge, a two-line display headline and subhead for the current step, and `ConversationPreview`: a sample Conversation in `rounded-xl` brand-surface bubbles (Visitor → AI agent with its Knowledge file → Visitor asks for a person → "Waiting for your team"). It stays black in every theme and is decorative (`aria-hidden`) apart from the headline and subhead. Panel copy lives in `components/auth/content.ts`.
+  - **Below `lg:`** the panel becomes a short banner (headline only) between the header and the card.
 
 ## Components
 

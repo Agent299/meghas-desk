@@ -68,9 +68,9 @@ export function LoginForm({
   }
 
   return (
-    <AuthCard cover priority>
+    <AuthCard>
       <FieldGroup>
-        <AuthHeader title="Welcome back" description="Log in to your MeghasDesk account" />
+        <AuthHeader title="Welcome Back" description="Log in to your MeghasDesk account" />
         {passwordReset && !formError && (
           <FormAlert variant="success">Password updated. Log in with your new password.</FormAlert>
         )}
@@ -94,6 +94,7 @@ export function LoginForm({
                 type="password"
                 label="Password"
                 autoComplete="current-password"
+                placeholder="Enter your password"
                 error={errors.password}
                 disabled={pending}
                 labelAction={
@@ -106,7 +107,7 @@ export function LoginForm({
                 }
               />
               <Field>
-                <Button type="submit" disabled={pending}>
+                <Button size="xl" type="submit" disabled={pending}>
                   {pending ? "Logging in…" : "Log in"}
                 </Button>
               </Field>
@@ -124,7 +125,7 @@ export function LoginForm({
         <Field>
           <GoogleButton disabled={pending} onError={setFormError} />
           {mode === "password" && (
-            <Button
+            <Button size="xl"
               type="button"
               variant="outline"
               disabled={pending}

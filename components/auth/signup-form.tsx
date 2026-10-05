@@ -45,10 +45,10 @@ export function SignupForm() {
   }
 
   return (
-    <AuthCard cover>
+    <AuthCard>
       <FieldGroup>
         <AuthHeader
-          title="Create your account"
+          title="Create Your Account"
           description="Your AI agent answers Visitors; you step in when needed."
         />
         {formError && <FormAlert>{formError}</FormAlert>}
@@ -80,6 +80,7 @@ export function SignupForm() {
                 type="password"
                 label="Password"
                 autoComplete="new-password"
+                placeholder="Create a password"
                 description="At least 8 characters."
                 error={errors.password}
                 disabled={pending}
@@ -90,11 +91,12 @@ export function SignupForm() {
                 type="password"
                 label="Confirm password"
                 autoComplete="new-password"
+                placeholder="Repeat your password"
                 error={errors.confirmPassword}
                 disabled={pending}
               />
               <Field>
-                <Button type="submit" disabled={pending}>
+                <Button size="xl" type="submit" disabled={pending}>
                   {pending ? "Creating account…" : "Create account"}
                 </Button>
               </Field>
@@ -113,7 +115,7 @@ export function SignupForm() {
         <Field>
           <GoogleButton disabled={pending} onError={setFormError} />
           {mode === "password" && (
-            <Button
+            <Button size="xl"
               type="button"
               variant="outline"
               disabled={pending}
