@@ -37,7 +37,7 @@ export function GoogleButton({
   }
 
   return (
-    <Button
+    <Button size="xl"
       type="button"
       variant="outline"
       className="w-full"

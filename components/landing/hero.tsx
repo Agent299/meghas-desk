@@ -80,7 +80,7 @@ export function Hero({ hero, trust }: HeroProps) {
       <Button
         variant="glow"
         size="cta"
-        className="mt-[clamp(20px,3.4vh,34px)] animate-reveal-pulse motion-reduce:animate-none [@media(max-height:700px)]:mt-4"
+        className="mt-[clamp(20px,3.4vh,34px)] animate-reveal motion-reduce:animate-none [@media(max-height:700px)]:mt-4"
         style={delay(0.4)}
         nativeButton={false}
         render={<Link href={hero.cta.href} />}

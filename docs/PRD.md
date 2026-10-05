@@ -184,6 +184,7 @@ The engineering stack is already decided. The full detail is in [TECH-STACK.md](
 | Someone copies a widget snippet onto another site | **Decided:** Allowed domains are required and checked against the request origin. Rate limits apply on top |
 | Scanned PDFs and images with no text layer | Out of scope for v1. Mark the file **Failed** with a clear reason |
 | Can a Closed Conversation be reopened when the Visitor writes again? | **Decided:** yes, it reopens in AI answering |
+| Team members reading Conversations in other languages | Open: the AI replies in the Visitor's language, but nothing helps a Team member read or answer it. Auto-translation is out of scope for v1; revisit after launch |
 | Allowance and limit values | Open: pick numbers for the Monthly allowance, knowledge base size, and rate limits before M5 |
 | Auth emails come from Neon's shared sender | It's rate-limited and meant for development. **Before launch:** configure our own SMTP provider in Neon (`neon neon-auth config email-provider`). No app code changes |
 | Auth launch checklist | Before launch, on `production`: our own Google OAuth app (redirect `{NEON_AUTH_BASE_URL}/callback/google`) instead of Neon's shared credentials; our own SMTP; the production domain in trusted domains; turn off "Allow localhost" |

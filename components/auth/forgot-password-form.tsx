@@ -100,7 +100,7 @@ export function ForgotPasswordForm() {
         <form noValidate onSubmit={handleRequest}>
           <FieldGroup>
             <AuthHeader
-              title="Reset your password"
+              title="Reset Your Password"
               description="Enter your email and we'll send you a 6-digit code."
             />
             {formError && <FormAlert>{formError}</FormAlert>}
@@ -115,7 +115,7 @@ export function ForgotPasswordForm() {
               disabled={pending}
             />
             <Field>
-              <Button type="submit" disabled={pending}>
+              <Button size="xl" type="submit" disabled={pending}>
                 {pending ? "Sending code…" : "Send code"}
               </Button>
             </Field>
@@ -133,7 +133,7 @@ export function ForgotPasswordForm() {
       <form noValidate onSubmit={handleReset}>
         <FieldGroup>
           <AuthHeader
-            title="Choose a new password"
+            title="Choose a New Password"
             description={
               <>
                 If this email has an account, we sent it a 6-digit code:
@@ -152,6 +152,7 @@ export function ForgotPasswordForm() {
             type="password"
             label="New password"
             autoComplete="new-password"
+            placeholder="Create a new password"
             description="At least 8 characters."
             error={errors.password}
             disabled={pending}
@@ -162,14 +163,15 @@ export function ForgotPasswordForm() {
             type="password"
             label="Confirm new password"
             autoComplete="new-password"
+            placeholder="Repeat your new password"
             error={errors.confirmPassword}
             disabled={pending}
           />
           <Field>
-            <Button type="submit" disabled={pending}>
+            <Button size="xl" type="submit" disabled={pending}>
               {pending ? "Updating password…" : "Update password"}
             </Button>
-            <Button
+            <Button size="xl"
               type="button"
               variant="outline"
               onClick={handleResend}

@@ -9,6 +9,9 @@ import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/comp
  * The 6-digit email code, as shadcn's InputOTP. Uncontrolled: the value is
  * submitted with the form under `name`, so the forms read it from FormData.
  */
+// Big slots with the digit in the display face: a single glyph, as DESIGN.md allows.
+const slot = "size-12 font-display text-2xl";
+
 export function OtpField({
   id,
   name,
@@ -44,15 +47,15 @@ export function OtpField({
         containerClassName="justify-center"
       >
         <InputOTPGroup>
-          <InputOTPSlot index={0} />
-          <InputOTPSlot index={1} />
-          <InputOTPSlot index={2} />
+          <InputOTPSlot index={0} className={slot} />
+          <InputOTPSlot index={1} className={slot} />
+          <InputOTPSlot index={2} className={slot} />
         </InputOTPGroup>
         <InputOTPSeparator />
         <InputOTPGroup>
-          <InputOTPSlot index={3} />
-          <InputOTPSlot index={4} />
-          <InputOTPSlot index={5} />
+          <InputOTPSlot index={3} className={slot} />
+          <InputOTPSlot index={4} className={slot} />
+          <InputOTPSlot index={5} className={slot} />
         </InputOTPGroup>
       </InputOTP>
       {error && <FieldError id={errorId}>{error}</FieldError>}

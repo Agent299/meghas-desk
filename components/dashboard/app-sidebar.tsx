@@ -18,6 +18,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar"
 
@@ -41,12 +42,14 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
   }, [])
 
   return (
-    <Sidebar collapsible="offcanvas" {...props}>
+    <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
-              className="data-[slot=sidebar-menu-button]:p-1.5!"
+              size="lg"
+              tooltip="MeghasDesk"
+              className="hover:bg-transparent active:bg-transparent"
               render={
                 <Link
                   href="/dashboard"
@@ -54,10 +57,11 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                 />
               }
             >
-              <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-foreground text-background">
+              {/* The same mark as the auth header: LogoMark at 72% of a foreground circle. */}
+              <span className="grid size-8 shrink-0 place-items-center rounded-full bg-foreground text-background shadow-soft">
                 <LogoMark className="size-[72%]" />
               </span>
-              <span className="text-base font-semibold">MeghasDesk</span>
+              <span className="text-[15px] font-medium tracking-[-0.01em]">MeghasDesk</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -68,6 +72,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
       <SidebarFooter>
         <NavUser user={user} onLogOut={handleLogOut} />
       </SidebarFooter>
+      <SidebarRail />
     </Sidebar>
   )
 }

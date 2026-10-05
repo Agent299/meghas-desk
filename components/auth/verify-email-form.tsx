@@ -35,9 +35,9 @@ export function VerifyEmailForm({
     return (
       <AuthCard>
         <FieldGroup>
-          <AuthHeader title="Confirm your email" />
+          <AuthHeader title="Confirm Your Email" />
           <FormAlert>We don&apos;t know which email to confirm. Sign up again to get a new code.</FormAlert>
-          <Button nativeButton={false} render={<Link href="/signup" />}>
+          <Button size="xl" nativeButton={false} render={<Link href="/signup" />}>
             Go to sign up
           </Button>
           <FieldDescription className="text-center">
@@ -93,7 +93,7 @@ export function VerifyEmailForm({
       <form noValidate onSubmit={handleSubmit}>
         <FieldGroup>
           <AuthHeader
-            title="Confirm your email"
+            title="Confirm Your Email"
             description={
               <>
                 {fromLogin && <span className="block">Your email isn&apos;t confirmed yet.</span>}
@@ -106,10 +106,10 @@ export function VerifyEmailForm({
           {resent && <FormAlert variant="success">Code sent. Check your inbox.</FormAlert>}
           <OtpField id="otp" name="otp" autoFocus error={errors.otp} disabled={pending} />
           <Field>
-            <Button type="submit" disabled={pending}>
+            <Button size="xl" type="submit" disabled={pending}>
               {pending ? "Verifying…" : "Verify"}
             </Button>
-            <Button
+            <Button size="xl"
               type="button"
               variant="outline"
               onClick={handleResend}

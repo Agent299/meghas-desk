@@ -82,10 +82,10 @@ export function MagicLinkForm({
           </p>
         </div>
         <Field>
-          <Button type="button" variant="outline" onClick={() => setSentTo(null)}>
+          <Button size="xl" type="button" variant="outline" onClick={() => setSentTo(null)}>
             Use a different email
           </Button>
-          <Button type="button" variant="ghost" onClick={onCancel}>
+          <Button size="xl" type="button" variant="ghost" onClick={onCancel}>
             {cancelLabel}
           </Button>
         </Field>
@@ -122,10 +122,10 @@ export function MagicLinkForm({
           disabled={pending}
         />
         <Field>
-          <Button type="submit" disabled={pending}>
+          <Button size="xl" type="submit" disabled={pending}>
             {pending ? "Sending link…" : "Email me a sign-in link"}
           </Button>
-          <Button type="button" variant="ghost" onClick={onCancel} disabled={pending}>
+          <Button size="xl" type="button" variant="ghost" onClick={onCancel} disabled={pending}>
             {cancelLabel}
           </Button>
         </Field>

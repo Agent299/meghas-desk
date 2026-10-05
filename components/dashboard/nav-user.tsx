@@ -45,11 +45,11 @@ function UserIdentity({ user }: { user: DashboardUser }) {
   const { primary, secondary, initials } = getUserDisplay(user)
   return (
     <>
-      <Avatar className="size-8 rounded-lg after:rounded-lg">
+      <Avatar className="size-8">
         {user.image ? (
-          <AvatarImage src={user.image} alt="" className="rounded-lg" />
+          <AvatarImage src={user.image} alt="" />
         ) : null}
-        <AvatarFallback className="rounded-lg bg-primary font-medium text-primary-foreground">
+        <AvatarFallback className="bg-primary font-medium text-primary-foreground">
           {initials}
         </AvatarFallback>
       </Avatar>
@@ -68,6 +68,7 @@ function UserIdentity({ user }: { user: DashboardUser }) {
 export function NavUser({ user, onLogOut }: NavUserProps) {
   const { isMobile } = useSidebar()
   const { theme, setTheme } = useTheme()
+  const { primary } = getUserDisplay(user)
 
   return (
     <SidebarMenu>
@@ -77,7 +78,9 @@ export function NavUser({ user, onLogOut }: NavUserProps) {
             render={
               <SidebarMenuButton
                 size="lg"
-                className="aria-expanded:bg-sidebar-accent"
+                tooltip={primary}
+                aria-label={`Account menu, ${primary}`}
+                className="aria-expanded:bg-sidebar-accent aria-expanded:shadow-soft"
               />
             }
           >
