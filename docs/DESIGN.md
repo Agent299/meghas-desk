@@ -94,6 +94,22 @@ All motion uses `--ease-out-expo` (`cubic-bezier(0.22, 1, 0.36, 1)`).
 - **Page gutter:** `px-[clamp(14px,3vw,32px)] py-[clamp(16px,2.4vh,28px)]`.
 - **Layering:** the background video sits at the bottom, content uses `z-10`, and the open mobile menu raises the header to `z-[60]`, above the dialog overlay (`z-50`).
 
+### Theme
+
+- `next-themes` with one `ThemeProvider` in the root layout (`components/theme-provider.tsx`), set up as in shadcn's dark-mode guide: class-based, defaults to **System**, no transition flash on change. Switch Light / Dark / System with `ModeToggle` (`components/mode-toggle.tsx`: dashboard header and auth pages) or the user menu's Theme submenu.
+- **Dashboard and auth pages follow the theme** through the shadcn tokens (`bg-background`, `text-muted-foreground`, `bg-sidebar`…). The **landing page stays black in every theme**: it uses fixed colours and brand surface tokens, which don't change under `.dark`. Anything added to the landing page must keep that true (for example the hero avatar rings are pinned to `ring-white`).
+
+### Dashboard layout
+
+The shell for everything a Team member does, built from shadcn's `dashboard-01` block and trimmed to the frame (`components/dashboard/`, `app/dashboard/layout.tsx`).
+
+- **Sidebar** (left, `variant="inset"`, collapses off-canvas; a sheet on mobile): `LogoMark` in a `bg-foreground` circle plus "MeghasDesk" at the top, then the navigation, then the user button at the bottom. Width `calc(var(--spacing) * 72)`.
+- **Navigation:** Overview (`/dashboard`, exact match) and Inbox (`/dashboard/inbox` and below). The active link uses the sidebar's `isActive` state and `aria-current="page"`. Add new sections here as links, not as nested menus.
+- **Header** (`--header-height: calc(var(--spacing) * 12)`): the sidebar toggle, a separator, the current page title, and the theme toggle on the right.
+- **User menu** (sidebar footer): avatar (image, or initials on `bg-primary`), name in `text-foreground` and email in `text-foreground/70`, truncated when long; a name-less user shows the email only. The menu holds **Theme** and **Log out**, nothing else until there is something real to put there.
+- **Pages** render inside the inset with `p-4 lg:p-6`. They don't render their own `<main>`; `SidebarInset` already is one.
+- **Auth pages** use the `login-04` card. `/login` and `/signup` show the form on the left and the still from the hero video (`public/auth-cover.jpg`) on the right from `md:` up; the single-purpose steps (`/forgot-password`, `/verify-email`) use the narrow card without the image. Email codes use shadcn's `InputOTP` (two groups of three). Form-level messages use shadcn's `Alert`. The theme toggle sits in the top-right corner.
+
 ## Components
 
 Every component is a shadcn/ui component (Base UI primitives, `base-nova` style). Brand needs are met by **adding variants**, not by writing new components.
